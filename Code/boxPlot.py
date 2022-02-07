@@ -16,7 +16,7 @@ def inverteDicionario(dicionario):
     for chave in chaves:
         dicionarioInvertido[chave]=dicionario[chave]
     return dicionarioInvertido
-def geraPlot(arquivo, comMedia):
+def geraPlot(arquivo, comMedia, comMediannaBarra,comMediaBarra):
     # ------------- Definições padrões--------------------
     # define tamanho dos textos
     tamanho_texto_super_pequeno="xx-small"
@@ -128,32 +128,39 @@ def geraPlot(arquivo, comMedia):
         print("numero de dados:",len(dataset))
 
         # cria propriedades da linha de media e da mediana
-        propriedades_medianas={'color':vermelho,'linewidth':1.5}
-        propriedades_medias={"linestyle":"-","color":verde}
+        if comMediannaBarra:
+            propriedades_medianas={'color':vermelho,'linewidth':1.5}
+        else:
+            propriedades_medianas={'color':vermelho,'linewidth':0}
+        if comMediaBarra:
+            propriedades_medias={"linestyle":"-","color":verde}
+        else:
+            propriedades_medias={"linestyle":"-","color":verde}
         # cria boxplot mostrando medias e linha de medias(showmean e meanline True) com dados na vertical (vert=False) sem outliers(showfliers=False) 
         #graf=ax1.boxplot(dataset,labels=nomes,vert=False,showmeans=True,meanline=True,medianprops=propriedades_medianas,meanprops=propriedades_medias,flierprops={"marker":"+"},patch_artist=True,showfliers=False)
 
         # cria boxplot mostrando medias e linha de medias(showmean e meanline True) com dados na vertical (vert=False) com outliers
-        graf=ax1.boxplot(dataset,labels=nomes,vert=False,showmeans=True,meanline=True,medianprops=propriedades_medianas,meanprops=propriedades_medias,flierprops={"marker":"+"},patch_artist=True)
+        graf=ax1.boxplot(dataset,labels=nomes,vert=False,showmeans=comMediaBarra,meanline=comMediaBarra,medianprops=propriedades_medianas,meanprops=propriedades_medias,flierprops={"marker":"+"},patch_artist=True)
 
         # Coloca um texto com o valor da média de cada coluna no grafico
-        if len(media)<3:
-            offset=1.1
-        elif len(media)<4:
-            offset=1.2
-        else:
-            offset=1.3
-        for i in range(len(media)):
-            if media[i]>1000000:
-                ax1.text(media[i],i+offset,"{:d}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
-            elif media [i]>1000:
-                ax1.text(media[i],i+offset,"{:.1f}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
-            elif media [i]>1:
-                ax1.text(media[i],i+offset,"{:.2f}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
-            elif media [i]>0.0001:
-                ax1.text(media[i],i+offset,"{:.4f}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
+        if comMediaBarra:
+            if len(media)<3:
+                offset=1.1
+            elif len(media)<4:
+                offset=1.2
             else:
-                ax1.text(media[i],i+offset,"{}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
+                offset=1.3
+            for i in range(len(media)):
+                if media[i]>1000000:
+                    ax1.text(media[i],i+offset,"{:d}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
+                elif media [i]>1000:
+                    ax1.text(media[i],i+offset,"{:.1f}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
+                elif media [i]>1:
+                    ax1.text(media[i],i+offset,"{:.2f}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
+                elif media [i]>0.0001:
+                    ax1.text(media[i],i+offset,"{:.4f}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
+                else:
+                    ax1.text(media[i],i+offset,"{}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
             
         # define titulo do grafico e dos eixos
         ax1.set_title(titulo, fontsize=tamanho_texto_grande,fontweight="bold")
